@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/scandit-sdk@5.x"></script>
+    </head>
+    <body>
+        <div id="scanner">
+
+        </div>
+        <script>
+            var API_KEY = 'AU2fyThfGLjyC3IjwChLJrwJnN3yHLIFsBc9xPg5vfYsZTGufgSNsRdtExZDYk36rlCJkLxixuYNWztI52eo4N95llEdVqq343p6HQNOOcxUH1REDDhMisQThBL8JTR/XKJfmjeGi8tkB/2R7SMVStopM3kTSxGtYzvRGnnsx3IH8M8hnI9H8b/ZrMe3sdlfT+cfgQJCiqGYLlohhJ4y1tPgxoyKyhwqGUb+iYJPKmHZGADUn6m0bmTpIFiwMSpYQs9uuMd/QPS+N+Aum7+nJY90uuWQ87GMpyTledoiOkwlp9aHjGd1gIw0c9k41VIT4B1zgXY55gTDLAgyAla1FbTqKJLlxsPPa1+uDSi27xSW2VdD5pp8cnPxBzUwViaW9owXscM6Qs7z3fHdycd9lEZSruE+mMFbWwKtb2VNqS5dM2TSGQC+HoycKswNApBdVtWMdwtVS9HR815c2EpWtjoIHn7vo/OrSzoPx2QjF8f4N2wCPnMRe8qm2B/5mOj6QcaBeYKlcm8exUnobhGdfe17QeWiJqC0zO1LhMFPSaFX39+0x8jshX+8ACib2RLw6LnCAHEH323NOQUxn3MRepzmCO59nvWkyz2U5U6KWZv9aMIoMdguOZlCh6ECzlCdBw3NbEWk4M0RNj9fov7H10z3XV+xymS+EDNvKmqGbU60J9+dGp0W4IECqcsefAhLZKzcjGMV2Nlg4VMi5Vw69VoSA+c/cFX5RTj5kBzn1TAgqMUrMloZdbEsU4qaSvIu+Z21QFSe00rXFXQshDetRq4kiyG2P03pbUr4exSJ';
+
+            var ENGINE_LOCATION = 'https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build/';
+
+            Scan(document.querySelector('#scanner'));
+
+            function Scan (uiElement) {
+                ScanditSDK.configure(API_KEY, {
+                    engineLocation: ENGINE_LOCATION,
+                })
+                .then(() => {
+                    return ScanditSDK.BarcodePicker.create(uiElement, {
+                        scanSettings: new ScanditSDK.ScanSettings({ enabledSymbologies: ["ean8", "ean13", "upca", "upce"] }),
+                    });
+                })
+                .then((barcodePicker) => {
+                    
+                    barcodePicker.on("scan", (scanResult) => {
+                        alert(scanResult.barcodes[0].data);
+                        alert(scanResult.barcodes.reduce((string, barcode) => {
+                            return string + `${ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology)}: ${barcode.data}\n`;
+                        }, ""))
+                    });
+                });
+            }
+        </script>
+    </body>
+</html>
